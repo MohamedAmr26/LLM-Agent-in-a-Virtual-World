@@ -47,6 +47,7 @@ import asyncio
 import json
 import os
 import sys
+import time
 from datetime import datetime
  
 _THIS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -56,7 +57,7 @@ from termcolor import colored
 from Utils import in_boundaries, allowed_colors
 from google import genai
 from google.genai import types
- 
+from google.genai import errors
 from Classes.Player import Player
 from Classes.Chest import Chest
 from Classes.Door import Door
@@ -199,6 +200,25 @@ def get_all_grid_data():
 def get_inventory_data():
     return True, plr.Inventory.get_inventory_list()
 
+def build_state_prompt(history_lines: int = 15) -> str:
+    _, grid_text = get_all_grid_data()
+    _, inv_list = get_inventory_data()
+    inv_text = ", ".join(inv_list) if inv_list else "empty"
+
+    if os.path.exists(LOG_PATH):
+        with open(LOG_PATH, "r", encoding="utf-8") as f:
+            lines = f.readlines()[-history_lines:]
+        recent_history = "".join(lines).strip() or "(no actions yet)"
+    else:
+        recent_history = "(no actions yet)"
+
+    return (
+        "Current grid (row by row, '~' = empty):\n"
+        f"{grid_text}\n"
+        f"Current inventory: {inv_text}\n\n"
+        f"Recent action history (most recent last):\n{recent_history}\n\n"
+        "Decide and take your next action by calling one of your tools."
+    )
 
 ##########################
 # Tool dispatch table
@@ -406,53 +426,92 @@ config = {
     "system_instruction": SYSTEM_INSTRUCTION,
 }
 
-client = genai.Client(api_key=api_key)
-MODEL = "gemini-2.5-flash-live-preview"
+MODEL = "gemini-3.5-flash"
 
+generation_config = {
+    "system_instruction": SYSTEM_INSTRUCTION,
+    "tools": tools,
+}
+
+client = genai.Client(api_key=api_key)
 
 ##########################
 # Live session loop
 ##########################
+def run_turn(prompt: str, max_tool_rounds: int = 8):
+    """
+    One full agent turn: send the state prompt, execute any tool calls the
+    model makes, feed results back, and repeat until the model replies with
+    plain text (or we hit max_tool_rounds as a safety valve).
 
-async def handle_tool_call(session, tool_call):
-    """Executes every function call in a tool_call message and sends results back."""
-    function_responses = []
-    for fc in tool_call.function_calls:
-        args = dict(fc.args or {})
-        ok, payload = dispatch_tool_call(fc.name, args)
-        response_dict = {"success": ok, "message": payload if isinstance(payload, str) else None}
-        if isinstance(payload, list):
-            response_dict["data"] = payload
-            response_dict["message"] = None
-        function_responses.append(
-            types.FunctionResponse(id=fc.id, name=fc.name, response=response_dict)
-        )
-    await session.send_tool_response(function_responses=function_responses)
-    render()
+    Each tool-call round is its own generate_content request, so on the
+    free tier (5 req/min for gemini-3.5-flash) a single turn can exhaust
+    quota by itself if the model chains several tool calls. We pace every
+    request and retry once on 429 using the server's suggested delay.
+    """
+    contents = [{"role": "user", "parts": [{"text": prompt}]}]
 
+    for _ in range(max_tool_rounds):
+        time.sleep(13)  # ~4.5 req/min, stays under the 5/min free-tier cap
 
-async def run_session(initial_prompt: str):
-    async with client.aio.live.connect(model=MODEL, config=config) as session:
-        await session.send_client_content(turns={"parts": [{"text": initial_prompt}]})
+        try:
+            response = client.models.generate_content(
+                model=MODEL,
+                contents=contents,
+                config=generation_config,
+            )
+        except errors.ClientError as e:
+            if getattr(e, "code", None) == 429:
+                retry_after = 45  # fallback if we can't parse the server's suggestion
+                print(colored(f"Rate limited, waiting {retry_after}s...", "yellow"))
+                time.sleep(retry_after)
+                continue  # retry this same round
+            raise
 
-        async for response in session.receive():
-            if response.text is not None:
-                print(colored(response.text, "cyan"), end="")
-            if response.tool_call:
-                await handle_tool_call(session, response.tool_call)
+        candidate = response.candidates[0]
+        parts = candidate.content.parts
 
+        function_calls = [p.function_call for p in parts if getattr(p, "function_call", None)]
+        text_parts = [p.text for p in parts if getattr(p, "text", None)]
+
+        if text_parts:
+            print(colored("".join(text_parts), "cyan"))
+
+        if not function_calls:
+            break  # model is done for this turn, no more tools to run
+
+        # echo the model's turn (including its function call) back into history
+        contents.append({"role": "model", "parts": parts})
+
+        # execute each requested tool call and collect responses
+        response_parts = []
+        for fc in function_calls:
+            args = dict(fc.args or {})
+            ok, payload = dispatch_tool_call(fc.name, args)
+            response_dict = {"success": ok}
+            if isinstance(payload, list):
+                response_dict["data"] = payload
+            else:
+                response_dict["message"] = payload
+            response_parts.append({
+                "function_response": {
+                    "name": fc.name,
+                    "response": response_dict,
+                }
+            })
+
+        contents.append({"role": "user", "parts": response_parts})
+        render()
 
 def main():
-    print(colored("Simulation ready. (Ctrl+C to quit).", "yellow"))
+    print(colored("Simulation running autonomously. (Ctrl+C to quit).", "yellow"))
     try:
         while True:
-            prompt = input("\n> ")
-            if not prompt.strip():
-                continue
-            asyncio.run(run_session(prompt))
+            prompt = build_state_prompt()
+            run_turn(prompt)
+            time.sleep(2)
     except KeyboardInterrupt:
         print("\nExiting.")
-
-
+        
 if __name__ == "__main__":
     main()

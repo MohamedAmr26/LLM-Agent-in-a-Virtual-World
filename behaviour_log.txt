@@ -1,0 +1,7 @@
+[17:02:11] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
+[17:02:12] move_player(dir='Rightward') -> True, Moved Rightward to (0, 2)
+[17:02:14] take_from_chest(dir='Downward', amount=5) -> False, Out of boundaries
+[17:05:11] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
+[17:05:26] move_player(dir='Rightward') -> True, Moved Rightward to (0, 2)
+[17:05:56] take_from_chest(dir='Downward', amount=5) -> False, Out of boundaries
+[17:06:27] move_player(dir='Leftward') -> True, Moved Leftward to (0, 1)
