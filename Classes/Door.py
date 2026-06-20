@@ -9,9 +9,11 @@ class Door(Object):
         super().__init__(x, y, self.type, self.symbol, self.color)
 
     def trigger_door(self):
-        if self.state == True:
+        if self.state:
             self.symbol = " "
             self.state = False
+            return True, "Door opened"
         else:
             self.state = True
             self.symbol = "#"
+            return True, "Door closed"

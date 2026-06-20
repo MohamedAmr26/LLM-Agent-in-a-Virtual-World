@@ -17,12 +17,14 @@ class Object:
         Object.registry[cls.__name__] = cls
 
     def add_to_grid(self, grid: List[List], GRID_X: int, GRID_Y: int):
+        if not in_boundaries(self.x, self.y, GRID_X, GRID_Y):
+            return False, "Out of boundaries"
+ 
         if grid[self.x][self.y] != -1:
             return False, "Something is already in that position"
-        if in_boundaries(self.x, self.y, GRID_X, GRID_Y):
-            grid[self.x][self.y] = self
-        else:
-            return False, "Out of boundries"
+ 
+        grid[self.x][self.y] = self
+        return True, f"{self.type} placed at ({self.x}, {self.y})"
 
     @classmethod
     def create(cls, type_name: str, *args, **kwargs):

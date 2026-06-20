@@ -1,20 +1,22 @@
 def in_boundaries(x: int, y: int, GRID_X: int, GRID_Y: int):
     return 0 <= x < GRID_X and 0 <= y < GRID_Y
 
-def get_pos_from_dir(dir: str, x, y, rows, cols):
-    res = -1, -1
+def get_pos_from_dir(dir: str, x: int, y: int, rows: int, cols: int):
     if dir == "Upward":
-        res = x+1, y
+        n_x, n_y = x + 1, y
     elif dir == "Downward":
-        res =  x-1, y
+        n_x, n_y = x - 1, y
     elif dir == "Rightward":
-        res =  x, y+1
+        n_x, n_y = x, y + 1
     elif dir == "Leftward":
-        res =  x, y-1
-
-    if in_boundaries(res[0], res[1], rows, cols):
+        n_x, n_y = x, y - 1
+    else:
         return -1, -1
-
-    return res
-
-allowed_colors = []
+ 
+    if not in_boundaries(n_x, n_y, rows, cols):
+        return -1, -1
+ 
+    return n_x, n_y
+ 
+ 
+allowed_colors = ["red", "green", "blue", "yellow", "light_grey", "white", "black", "magenta", "cyan"]
