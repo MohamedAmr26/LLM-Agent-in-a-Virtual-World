@@ -25,7 +25,7 @@ class Player(Object):
         if (n_x, n_y) == (-1, -1):
             return False, "Out of boundaries"
 
-        if grid[n_x][n_y] != 1 and grid[n_x][n_y].type == "Door" and grid[n_x][n_y].state == True:
+        if grid[n_x][n_y] != -1 and grid[n_x][n_y].type == "Door" and grid[n_x][n_y].state == True:
             return False, "There's a closed door here"
 
         if grid[n_x][n_y] != -1 and grid[n_x][n_y].type != "Door":

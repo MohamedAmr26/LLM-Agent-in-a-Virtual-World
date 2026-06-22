@@ -26,3 +26,10 @@ VALID_TYPES = {
     "block": "Block",
     "door": "Door"
 }
+
+DIRECTION_ALIASES = {
+    "up": "Upward", "right": "Rightward",
+    "down": "Downward", "left": "Leftward",
+    "Up": "Upward", "Right": "Rightward",
+    "Down": "Downward", "Left": "Leftward",
+}

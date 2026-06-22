@@ -55,7 +55,7 @@ sys.path.insert(0, os.path.join(_THIS_DIR, "Classes"))
 
 from termcolor import colored
 from openai import OpenAI, RateLimitError
-from Utils import ALLOWED_COLORS, DIRECTION_ENUM, OBJECT_TYPES
+from Utils import ALLOWED_COLORS, DIRECTION_ENUM, OBJECT_TYPES, DIRECTION_ALIASES
 from Classes.Player import Player
 from Classes.Chest import Chest
 from Classes.Door import Door
@@ -156,12 +156,17 @@ TOOL_FUNCTIONS = {
     "whats_inside_chest": lambda args: tools.whats_inside_chest(plr, grid, args["dir"], GRID_X, GRID_Y)
 }
 
+def sanitize_args(tool_name: str, args: dict) -> dict:
+    if "dir" in args:
+        args["dir"] = DIRECTION_ALIASES.get(args["dir"], args["dir"])
+    return args
 
 def dispatch_tool_call(name: str, args: dict):
     fn = TOOL_FUNCTIONS.get(name)
     if fn is None:
         return False, f"Unknown tool: {name}"
     try:
+        args = sanitize_args(name, args)
         return fn(args)
     except KeyError as e:
         return False, f"Missing required argument: {e}"
@@ -377,12 +382,17 @@ SYSTEM_INSTRUCTION = (
     "You MUST interact with the world by calling the provided tools"
     "never claim an action happened unless the matching tool call returned success."
     "Every tool returns a boolean success flag and a message."
+    "CRITICAL: Your goal is to build a house."
     "if success is false, read the message, find the issue and try again or pick a different action."
     "Use get_all_grid_data or whats_in_position to understand your surroundings before acting."
     "Use get_inventory_data to check what you're carrying before building."
     "Use whats_inside_chest to know what is inside the chest that is a neighbour to you"
     "You must do an action on your prompt."
-    "Make sure you don't be stuck between blocks, You can only go through empty places or opened doors"
+    "CRITIAL: Make sure you don't be stuck between blocks, You can only go through empty places or opened doors",
+    "The grid state and inventory are ALREADY provided in your prompt. "
+    "Do NOT call get_all_grid_data or get_inventory_data at the start of a turn — "
+    "use the provided state and act immediately. "
+    "Only call those tools if you need to verify something after an action."
 )
 
 MODEL = "openai/gpt-oss-120b:free"
@@ -396,7 +406,7 @@ client = OpenAI(
 # Agent turn loop
 ##########################
 
-def run_turn(prompt: str, max_tool_rounds: int = 8):
+def run_turn(prompt: str, max_tool_rounds: int = 13):
     messages = [
         {"role": "system", "content": SYSTEM_INSTRUCTION},
         {"role": "user", "content": prompt},
