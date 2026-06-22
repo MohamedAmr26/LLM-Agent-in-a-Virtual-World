@@ -418,6 +418,7 @@ SYSTEM_INSTRUCTION = (
     "again or pick a different action. Use get_all_grid_data or "
     "whats_in_position to understand your surroundings before acting, and "
     "get_inventory_data to check what you're carrying before building."
+    "You must do an action on your prompt."
 )
 
 config = {
@@ -512,6 +513,6 @@ def main():
             time.sleep(2)
     except KeyboardInterrupt:
         print("\nExiting.")
-        
+
 if __name__ == "__main__":
     main()

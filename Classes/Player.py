@@ -87,26 +87,7 @@ class Player(Object):
  
         obj = Object.create(objType, n_x, n_y)
         return obj.add_to_grid(grid, GRID_X, GRID_Y)
-    
-    def build_object(self, grid: List[List], objType: str, dir: str) -> tuple[bool, str]:
-        GRID_X = len(grid)
-        GRID_Y = len(grid[0])
-        n_x, n_y = get_pos_from_dir(dir, self.x, self.y, GRID_X, GRID_Y)
-
-        if (n_x, n_y) == (-1, -1):
-            return False, "Out of boundaries"
         
-        if grid[n_x][n_y] != -1:
-            return False, "There's something already there"
-        
-        res, msg = self.Inventory.DecreaseFromType(objType, 1)
-
-        if not res:
-            return res, msg
-        
-        obj = Object.create(objType, n_x, n_y)
-        return obj.add_to_grid(grid, GRID_X, GRID_Y)
-    
     def color_block(self, grid: List[List], dir: str, color: str):
         GRID_X = len(grid)
         GRID_Y = len(grid[0])
