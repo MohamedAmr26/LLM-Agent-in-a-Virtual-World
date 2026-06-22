@@ -5,6 +5,7 @@ Main tools for LLM
 get_player_position() -> (x, y)
 move_player(dir: str) -> (bool, str)
 take_from_chest(dir: str, amount: int) -> (bool, str)
+whats_inside_chest(dir: str) -> (bool, str)
 build_object(objType: str, dir: str) -> (bool, str)
 color_block(dir: str, new_color: str) -> (bool, str)
 trigger_door(dir: str) -> (bool, str)
@@ -43,48 +44,29 @@ Outputs
 * Looping view while the behaviour is happening
 
 """
-import asyncio
 import json
 import os
 import sys
 import time
 from datetime import datetime
- 
+
 _THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(_THIS_DIR, "Classes"))
- 
+
 from termcolor import colored
-from Utils import in_boundaries, allowed_colors
-from google import genai
-from google.genai import types
-from google.genai import errors
+from openai import OpenAI, RateLimitError
+from Utils import ALLOWED_COLORS, DIRECTION_ENUM
 from Classes.Player import Player
 from Classes.Chest import Chest
-from Classes.Door import Door
-from Classes.Block import Block
+import tools
 from dotenv import load_dotenv
 
 load_dotenv()
 
-api_key = os.getenv("GOOGLE_API_KEY")
+api_key = os.getenv("OPENROUTER_API_KEY")
 
 ##########################
-# Logging
-##########################
-
-LOG_PATH = "behaviour_log.txt"
-
-
-def log(line: str):
-    timestamp = datetime.now().strftime("%H:%M:%S")
-    entry = f"[{timestamp}] {line}"
-    print(entry)
-    with open(LOG_PATH, "a", encoding="utf-8") as f:
-        f.write(entry + "\n")
-
-
-##########################
-# Game setup
+# Simulation setup
 ##########################
 
 GRID_SIZE = input("Enter Grid size (e.g. 5*5): ").split("*")
@@ -118,7 +100,6 @@ if not ok:
 
 
 def render():
-    """Prints the grid to stdout using each object's symbol/color."""
     for x in range(GRID_X):
         row_parts = []
         for y in range(GRID_Y):
@@ -133,80 +114,13 @@ def render():
 
 render()
 
-##########################
-# Tool implementations
-# Every tool returns (bool, str) so the model gets explicit
-# success/failure plus a human-readable reason it can act on.
-##########################
-
-
-def get_player_position():
-    x, y = plr.get_current_position()
-    return True, f"Player is at ({x}, {y})"
-
-
-def move_player(dir: str):
-    ok, msg = plr.move(dir, grid)
-    log(f"move_player(dir={dir!r}) -> {ok}, {msg}")
-    return ok, msg
-
-
-def take_from_chest(dir: str, amount: int):
-    ok, msg = plr.take_from_chest(grid, dir, amount)
-    log(f"take_from_chest(dir={dir!r}, amount={amount}) -> {ok}, {msg}")
-    return ok, msg
-
-
-def build_object(objType: str, dir: str):
-    ok, msg = plr.build_object(grid, objType, dir)
-    log(f"build_object(objType={objType!r}, dir={dir!r}) -> {ok}, {msg}")
-    return ok, msg
-
-
-def color_block(dir: str, new_color: str):
-    ok, msg = plr.color_block(grid, dir, new_color)
-    log(f"color_block(dir={dir!r}, new_color={new_color!r}) -> {ok}, {msg}")
-    return ok, msg
-
-
-def trigger_door(dir: str):
-    ok, msg = plr.trigger_door(grid, dir)
-    log(f"trigger_door(dir={dir!r}) -> {ok}, {msg}")
-    return ok, msg
-
-
-def whats_in_position(x: int, y: int):
-    if not in_boundaries(x, y, GRID_X, GRID_Y):
-        return False, "Out of boundaries"
-
-    obj = grid[x][y]
-
-    if obj == -1:
-        return True, "empty"
-    return True, obj.getInfo()
-
-
-def get_all_grid_data():
-    res = ""
-    for x in range(GRID_X):
-        row = []
-        for y in range(GRID_Y):
-            obj = grid[x][y]
-            row.append("~" if obj == -1 else obj.type)
-        res += " ".join(row) + "\n"
-    return True, res
-
-
-def get_inventory_data():
-    return True, plr.Inventory.get_inventory_list()
-
 def build_state_prompt(history_lines: int = 15) -> str:
-    _, grid_text = get_all_grid_data()
-    _, inv_list = get_inventory_data()
+    _, grid_text = tools.get_all_grid_data(grid, GRID_X, GRID_Y)
+    _, inv_list = tools.get_inventory_data(plr)
     inv_text = ", ".join(inv_list) if inv_list else "empty"
 
-    if os.path.exists(LOG_PATH):
-        with open(LOG_PATH, "r", encoding="utf-8") as f:
+    if os.path.exists(tools.LOG_PATH):
+        with open(tools.LOG_PATH, "r", encoding="utf-8") as f:
             lines = f.readlines()[-history_lines:]
         recent_history = "".join(lines).strip() or "(no actions yet)"
     else:
@@ -220,30 +134,26 @@ def build_state_prompt(history_lines: int = 15) -> str:
         "Decide and take your next action by calling one of your tools."
     )
 
+
 ##########################
 # Tool dispatch table
 ##########################
 
 TOOL_FUNCTIONS = {
-    "get_player_position": lambda args: get_player_position(),
-    "move_player": lambda args: move_player(args["dir"]),
-    "take_from_chest": lambda args: take_from_chest(args["dir"], int(args["amount"])),
-    "build_object": lambda args: build_object(args["objType"], args["dir"]),
-    "color_block": lambda args: color_block(args["dir"], args["new_color"]),
-    "trigger_door": lambda args: trigger_door(args["dir"]),
-    "whats_in_position": lambda args: whats_in_position(int(args["x"]), int(args["y"])),
-    "get_all_grid_data": lambda args: get_all_grid_data(),
-    "get_inventory_data": lambda args: get_inventory_data(),
+    "get_player_position": lambda args: tools.get_player_position(plr),
+    "move_player": lambda args: tools.move_player(plr, args["dir"], grid),
+    "take_from_chest": lambda args: tools.take_from_chest(plr, args["dir"], int(args["amount"]), grid),
+    "build_object": lambda args: tools.build_object(plr, args["objType"], args["dir"], grid),
+    "color_block": lambda args: tools.color_block(plr, args["dir"], args["new_color"], grid),
+    "trigger_door": lambda args: tools.trigger_door(plr, args["dir"], grid),
+    "whats_in_position": lambda args: tools.whats_in_position(plr, int(args["x"]), int(args["y"]), grid, GRID_X, GRID_Y),
+    "get_all_grid_data": lambda args: tools.get_all_grid_data(grid, GRID_X, GRID_Y),
+    "get_inventory_data": lambda args: tools.get_inventory_data(plr),
+    "whats_inside_chest": lambda args: tools.whats_inside_chest(plr, grid, args["dir"], GRID_X, GRID_Y)
 }
 
 
 def dispatch_tool_call(name: str, args: dict):
-    """
-    Executes a tool by name with the given args dict.
-    Always returns a (bool, payload) tuple -- payload may be a string or a list.
-    Never raises: malformed args or unknown tool names come back as a
-    clean (False, "...") result so the model can self-correct.
-    """
     fn = TOOL_FUNCTIONS.get(name)
     if fn is None:
         return False, f"Unknown tool: {name}"
@@ -253,256 +163,300 @@ def dispatch_tool_call(name: str, args: dict):
         return False, f"Missing required argument: {e}"
     except (TypeError, ValueError) as e:
         return False, f"Invalid argument: {e}"
-    except Exception as e:  # last-resort guard so a bad call can't crash the session
+    except Exception as e:
         return False, f"Tool execution error: {e}"
 
 
 ##########################
-# Function declarations (schemas) for Gemini
+# Tool schemas (OpenAI format)
 ##########################
 
-DIRECTION_ENUM = ["Upward", "Downward", "Leftward", "Rightward"]
-
-get_player_position_decl = {
-    "name": "get_player_position",
-    "description": "Get the player's current (x, y) grid position.",
-    "parameters": {"type": "object", "properties": {}},
-}
-
-move_player_decl = {
-    "name": "move_player",
-    "description": "Move the player one cell in the given direction, if that cell is in bounds and empty.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "dir": {
-                "type": "string",
-                "enum": DIRECTION_ENUM,
-                "description": "Direction to move the player.",
-            }
+ALL_TOOLS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_player_position",
+            "description": "Get the player's current (x, y) grid position.",
+            "parameters": {"type": "object", "properties": {}, "required": []},
         },
-        "required": ["dir"],
     },
-}
-
-take_from_chest_decl = {
-    "name": "take_from_chest",
-    "description": (
-        "Take items from a Chest adjacent to the player in the given direction, "
-        "moving them into the player's inventory. Fails if there's no chest there, "
-        "the chest doesn't have enough items, or the inventory is full."
-    ),
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "dir": {
-                "type": "string",
-                "enum": DIRECTION_ENUM,
-                "description": "Direction of the chest relative to the player.",
-            },
-            "amount": {
-                "type": "integer",
-                "description": "Number of items to take from the chest.",
+    {
+        "type": "function",
+        "function": {
+            "name": "move_player",
+            "description": (
+                "Move the player one cell in the given direction, "
+                "if that cell is in bounds and empty."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "dir": {
+                        "type": "string",
+                        "enum": DIRECTION_ENUM,
+                        "description": "Direction to move the player.",
+                    }
+                },
+                "required": ["dir"],
             },
         },
-        "required": ["dir", "amount"],
     },
-}
-
-build_object_decl = {
-    "name": "build_object",
-    "description": (
-        "Build/place an object from the player's inventory into the empty cell "
-        "adjacent to the player in the given direction. Consumes one item of "
-        "objType from the inventory."
-    ),
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "objType": {
-                "type": "string",
-                "description": "The inventory item type to build, e.g. 'Block' or 'Door'.",
-            },
-            "dir": {
-                "type": "string",
-                "enum": DIRECTION_ENUM,
-                "description": "Direction relative to the player to build into.",
-            },
-        },
-        "required": ["objType", "dir"],
-    },
-}
-
-color_block_decl = {
-    "name": "color_block",
-    "description": "Change the color of a Block adjacent to the player in the given direction.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "dir": {
-                "type": "string",
-                "enum": DIRECTION_ENUM,
-                "description": "Direction of the block relative to the player.",
-            },
-            "new_color": {
-                "type": "string",
-                "enum": allowed_colors,
-                "description": "The new color to apply to the block.",
+    {
+        "type": "function",
+        "function": {
+            "name": "take_from_chest",
+            "description": (
+                "Take items from a Chest adjacent to the player in the given direction, "
+                "moving them into the player's inventory. Fails if there's no chest there, "
+                "the chest doesn't have enough items, or the inventory is full."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "dir": {
+                        "type": "string",
+                        "enum": DIRECTION_ENUM,
+                        "description": "Direction of the chest relative to the player.",
+                    },
+                    "amount": {
+                        "type": "integer",
+                        "description": "Number of items to take from the chest.",
+                    },
+                },
+                "required": ["dir", "amount"],
             },
         },
-        "required": ["dir", "new_color"],
     },
-}
-
-trigger_door_decl = {
-    "name": "trigger_door",
-    "description": "Open or close a Door adjacent to the player in the given direction (toggles its state).",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "dir": {
-                "type": "string",
-                "enum": DIRECTION_ENUM,
-                "description": "Direction of the door relative to the player.",
-            }
+    {
+        "type": "function",
+        "function": {
+            "name": "build_object",
+            "description": (
+                "Build/place an object from the player's inventory into the empty cell "
+                "adjacent to the player in the given direction. Consumes one item of "
+                "objType from the inventory."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "objType": {
+                        "type": "string",
+                        "description": "The inventory item type to build, e.g. 'Block' or 'Door'.",
+                    },
+                    "dir": {
+                        "type": "string",
+                        "enum": DIRECTION_ENUM,
+                        "description": "Direction relative to the player to build into.",
+                    },
+                },
+                "required": ["objType", "dir"],
+            },
         },
-        "required": ["dir"],
     },
-}
-
-whats_in_position_decl = {
-    "name": "whats_in_position",
-    "description": "Inspect a specific grid cell by absolute (x, y) coordinates and describe what's there.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "x": {"type": "integer", "description": "Row index (0-based)."},
-            "y": {"type": "integer", "description": "Column index (0-based)."},
+    {
+        "type": "function",
+        "function": {
+            "name": "color_block",
+            "description": (
+                "Change the color of a Block adjacent to the player in the given direction."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "dir": {
+                        "type": "string",
+                        "enum": DIRECTION_ENUM,
+                        "description": "Direction of the block relative to the player.",
+                    },
+                    "new_color": {
+                        "type": "string",
+                        "enum": ALLOWED_COLORS,
+                        "description": "The new color to apply to the block.",
+                    },
+                },
+                "required": ["dir", "new_color"],
+            },
         },
-        "required": ["x", "y"],
     },
-}
-
-get_all_grid_data_decl = {
-    "name": "get_all_grid_data",
-    "description": "Get a text rendering of the entire grid, row by row, showing each cell's object type or '~' for empty.",
-    "parameters": {"type": "object", "properties": {}},
-}
-
-get_inventory_data_decl = {
-    "name": "get_inventory_data",
-    "description": "Get the player's current inventory contents as a list of 'itemType: count' strings.",
-    "parameters": {"type": "object", "properties": {}},
-}
-
-ALL_FUNCTION_DECLARATIONS = [
-    get_player_position_decl,
-    move_player_decl,
-    take_from_chest_decl,
-    build_object_decl,
-    color_block_decl,
-    trigger_door_decl,
-    whats_in_position_decl,
-    get_all_grid_data_decl,
-    get_inventory_data_decl,
+    {
+        "type": "function",
+        "function": {
+            "name": "trigger_door",
+            "description": (
+                "Open or close a Door adjacent to the player in the given direction "
+                "(toggles its state)."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "dir": {
+                        "type": "string",
+                        "enum": DIRECTION_ENUM,
+                        "description": "Direction of the door relative to the player.",
+                    }
+                },
+                "required": ["dir"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "whats_in_position",
+            "description": (
+                "Inspect a specific grid cell by absolute (x, y) coordinates "
+                "and describe what's there."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "x": {"type": "integer", "description": "Row index (0-based)."},
+                    "y": {"type": "integer", "description": "Column index (0-based)."},
+                },
+                "required": ["x", "y"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_all_grid_data",
+            "description": (
+                "Get a text rendering of the entire grid, row by row, showing each "
+                "cell's object type or '~' for empty."
+            ),
+            "parameters": {"type": "object", "properties": {}, "required": []},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_inventory_data",
+            "description": (
+                "Get the player's current inventory contents as a list of "
+                "'itemType: count' strings."
+            ),
+            "parameters": {"type": "object", "properties": {}, "required": []},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "whats_inside_chest",
+            "description": (
+                "Finds out what is the held material inside a chest and it's amount "
+                "adjacent to the player in the given direction."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "dir": {
+                        "type": "string",
+                        "enum": DIRECTION_ENUM,
+                        "description": "Direction of the door relative to the player.",
+                    }
+                },
+                "required": ["dir"],
+            },
+        },
+    },
 ]
 
-tools = [{"function_declarations": ALL_FUNCTION_DECLARATIONS}]
+##########################
+# OpenRouter client setup
+##########################
 
 SYSTEM_INSTRUCTION = (
-    "You are an agent controlling a player inside a 2D grid simulation. "
-    "You may ONLY interact with the world by calling the provided tools -- "
-    "never claim an action happened unless the matching tool call returned "
-    "success. Every tool returns a boolean success flag and a message: "
-    "if success is false, read the message, adjust your approach, and try "
-    "again or pick a different action. Use get_all_grid_data or "
-    "whats_in_position to understand your surroundings before acting, and "
-    "get_inventory_data to check what you're carrying before building."
+    "You are a player inside a 2D grid simulation. "
+    "You MUST interact with the world by calling the provided tools"
+    "never claim an action happened unless the matching tool call returned success."
+    "Every tool returns a boolean success flag and a message."
+    "if success is false, read the message, find the issue and try again or pick a different action."
+    "Use get_all_grid_data or whats_in_position to understand your surroundings before acting."
+    "Use get_inventory_data to check what you're carrying before building."
+    "Use whats_inside_chest to know what is inside the chest that is a neighbour to you"
     "You must do an action on your prompt."
 )
 
-config = {
-    "response_modalities": ["TEXT"],
-    "tools": tools,
-    "system_instruction": SYSTEM_INSTRUCTION,
-}
+MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free"
 
-MODEL = "gemini-3.5-flash"
-
-generation_config = {
-    "system_instruction": SYSTEM_INSTRUCTION,
-    "tools": tools,
-}
-
-client = genai.Client(api_key=api_key)
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=api_key,
+)
 
 ##########################
-# Live session loop
+# Agent turn loop
 ##########################
+
 def run_turn(prompt: str, max_tool_rounds: int = 8):
-    """
-    One full agent turn: send the state prompt, execute any tool calls the
-    model makes, feed results back, and repeat until the model replies with
-    plain text (or we hit max_tool_rounds as a safety valve).
-
-    Each tool-call round is its own generate_content request, so on the
-    free tier (5 req/min for gemini-3.5-flash) a single turn can exhaust
-    quota by itself if the model chains several tool calls. We pace every
-    request and retry once on 429 using the server's suggested delay.
-    """
-    contents = [{"role": "user", "parts": [{"text": prompt}]}]
+    messages = [
+        {"role": "system", "content": SYSTEM_INSTRUCTION},
+        {"role": "user", "content": prompt},
+    ]
 
     for _ in range(max_tool_rounds):
-        time.sleep(13)  # ~4.5 req/min, stays under the 5/min free-tier cap
-
         try:
-            response = client.models.generate_content(
+            response = client.chat.completions.create(
                 model=MODEL,
-                contents=contents,
-                config=generation_config,
+                messages=messages,
+                tools=ALL_TOOLS,
+                tool_choice="auto",
             )
-        except errors.ClientError as e:
-            if getattr(e, "code", None) == 429:
-                retry_after = 45  # fallback if we can't parse the server's suggestion
-                print(colored(f"Rate limited, waiting {retry_after}s...", "yellow"))
-                time.sleep(retry_after)
-                continue  # retry this same round
-            raise
+        except RateLimitError:
+            retry_after = 45
+            print(colored(f"Rate limited, waiting {retry_after}s...", "yellow"))
+            time.sleep(retry_after)
+            continue
+        except Exception as e:
+            print(colored(e, "red"))
+            break
 
-        candidate = response.candidates[0]
-        parts = candidate.content.parts
+        message = response.choices[0].message
 
-        function_calls = [p.function_call for p in parts if getattr(p, "function_call", None)]
-        text_parts = [p.text for p in parts if getattr(p, "text", None)]
+        if message.content:
+            print(colored(message.content, "cyan"))
 
-        if text_parts:
-            print(colored("".join(text_parts), "cyan"))
-
-        if not function_calls:
-            break  # model is done for this turn, no more tools to run
-
-        # echo the model's turn (including its function call) back into history
-        contents.append({"role": "model", "parts": parts})
-
-        # execute each requested tool call and collect responses
-        response_parts = []
-        for fc in function_calls:
-            args = dict(fc.args or {})
-            ok, payload = dispatch_tool_call(fc.name, args)
-            response_dict = {"success": ok}
-            if isinstance(payload, list):
-                response_dict["data"] = payload
-            else:
-                response_dict["message"] = payload
-            response_parts.append({
-                "function_response": {
-                    "name": fc.name,
-                    "response": response_dict,
+        # Append the assistant reply (including its tool_calls) to history.
+        # We build a plain dict so there's no dependency on the SDK object type.
+        messages.append({
+            "role": "assistant",
+            "content": message.content,
+            "tool_calls": [
+                {
+                    "id": tc.id,
+                    "type": "function",
+                    "function": {
+                        "name": tc.function.name,
+                        "arguments": tc.function.arguments,
+                    },
                 }
+                for tc in message.tool_calls
+            ] or None
+        })
+
+        if not message.tool_calls:
+            break
+
+        # Execute each tool call and feed results back as "tool" messages.
+        for tc in message.tool_calls:
+            args = json.loads(tc.function.arguments)
+            ok, payload = dispatch_tool_call(tc.function.name, args)
+
+            result = {"success": ok}
+            if isinstance(payload, list):
+                result["data"] = payload
+            else:
+                result["message"] = payload
+
+            messages.append({
+                "role": "tool",
+                "tool_call_id": tc.id,
+                "content": json.dumps(result),
             })
 
-        contents.append({"role": "user", "parts": response_parts})
         render()
+
 
 def main():
     print(colored("Simulation running autonomously. (Ctrl+C to quit).", "yellow"))
@@ -513,6 +467,7 @@ def main():
             time.sleep(2)
     except KeyboardInterrupt:
         print("\nExiting.")
+
 
 if __name__ == "__main__":
     main()

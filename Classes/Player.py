@@ -1,7 +1,7 @@
 from typing import List
 from GameObject import Object
 from Inventory import Inventory
-from Utils import get_pos_from_dir, allowed_colors
+from Utils import get_pos_from_dir, ALLOWED_COLORS
 
 class Player(Object):
     def __init__(self, x: int, y: int, inventorySize: int) -> None:
@@ -25,7 +25,6 @@ class Player(Object):
         if grid[n_x][n_y] != -1:
             return False, "Something is blocking that direction"
  
-        # Only vacate the old cell once we know the move will succeed
         old_x, old_y = self.x, self.y
         grid[old_x][old_y] = -1
  
@@ -34,8 +33,6 @@ class Player(Object):
  
         ok, msg = self.add_to_grid(grid, GRID_X, GRID_Y)
         if not ok:
-            # Roll back -- shouldn't normally happen since we just checked
-            # the cell was empty, but keep state consistent if it ever does.
             self.x, self.y = old_x, old_y
             grid[old_x][old_y] = self
             return ok, msg
@@ -101,8 +98,8 @@ class Player(Object):
         if obj == -1 or obj.type != "Block":
             return False, "Empty place or isn't a Block"
  
-        if color not in allowed_colors:
-            return False, f"Given color isn't in the allowed colors: {allowed_colors}"
+        if color not in ALLOWED_COLORS:
+            return False, f"Given color isn't in the allowed colors: {ALLOWED_COLORS}"
  
         obj.color = color
  

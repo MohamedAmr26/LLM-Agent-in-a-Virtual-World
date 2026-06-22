@@ -20,4 +20,8 @@ class Chest(Object):
     def changeHeldType(self, heldType: str):
         self.heldType = heldType
         return True
+    
+    def getInfo(self):
+        return f"Chest holds {self.heldType} with an amount of {self.amount}"
+
 

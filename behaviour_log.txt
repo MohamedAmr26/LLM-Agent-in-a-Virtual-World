@@ -8,3 +8,15 @@
 [16:06:05] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
 [16:06:54] take_from_chest(dir='Downward', amount=5) -> False, Out of boundaries
 [16:44:14] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
+[17:41:58] take_from_chest(dir='Downward', amount=5) -> False, Nothing there or it's not a Chest
+[17:42:07] move_player(dir='Downward') -> True, Moved Downward to (1, 0)
+[17:42:28] move_player(dir='Rightward') -> False, Something is blocking that direction
+[17:42:31] move_player(dir='Downward') -> True, Moved Downward to (2, 0)
+[17:42:43] move_player(dir='Rightward') -> True, Moved Rightward to (2, 1)
+[19:20:35] take_from_chest(dir='Downward', amount=5) -> False, Nothing there or it's not a Chest
+[19:20:41] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
+[19:20:51] move_player(dir='Downward') -> False, Something is blocking that direction
+[19:20:52] move_player(dir='Leftward') -> True, Moved Leftward to (0, 0)
+[19:20:53] take_from_chest(dir='Downward', amount=5) -> False, Nothing there or it's not a Chest
+[19:33:00] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
+[19:33:03] move_player(dir='Downward') -> False, Something is blocking that direction

@@ -19,4 +19,5 @@ def get_pos_from_dir(dir: str, x: int, y: int, rows: int, cols: int):
     return n_x, n_y
  
  
-allowed_colors = ["red", "green", "blue", "yellow", "light_grey", "white", "black", "magenta", "cyan"]
+ALLOWED_COLORS = ["red", "green", "blue", "yellow", "light_grey", "white", "black", "magenta", "cyan"]
+DIRECTION_ENUM = ["Upward", "Downward", "Leftward", "Rightward"]
