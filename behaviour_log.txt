@@ -72,3 +72,62 @@
 [21:52:24] get_all_grid_data() -> True, grid=3x3
 [21:52:24] get_inventory_data() -> True, ['Block: 0']
 [21:52:33] whats_inside_chest(dir='Downward') -> True, Chest holds Block with an amount of 0
+[21:53:59] get_all_grid_data() -> True, grid=6x6
+[21:53:59] get_inventory_data() -> True, []
+[21:54:03] get_all_grid_data() -> True, grid=6x6
+[21:54:15] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
+[21:54:20] take_from_chest(dir='Downward', amount=1) -> True, Took 1 Door(s) from chest
+[21:54:25] build_object(objType='Door', dir='Rightward') -> True, Object successfully built at 0,2
+[21:54:29] get_all_grid_data() -> True, grid=6x6
+[21:54:29] get_inventory_data() -> True, ['Door: 0']
+[21:54:32] get_all_grid_data() -> True, grid=6x6
+[21:54:36] trigger_door(dir='Rightward') -> True, Door opened
+[21:54:40] get_all_grid_data() -> True, grid=6x6
+[21:54:40] get_inventory_data() -> True, ['Door: 0']
+[21:54:50] whats_inside_chest(dir='Downward') -> True, Chest holds Door with an amount of 1
+[21:54:59] move_player(dir='Rightward') -> False, Something is blocking that direction
+[21:55:02] get_all_grid_data() -> True, grid=6x6
+[21:55:14] whats_inside_chest(dir='Downward') -> True, Chest holds Door with an amount of 1
+[21:55:18] trigger_door(dir='Rightward') -> True, Door closed
+[21:55:24] get_all_grid_data() -> True, grid=6x6
+[21:55:24] get_inventory_data() -> True, ['Door: 0']
+[21:55:29] trigger_door(dir='Rightward') -> True, Door opened
+[21:55:32] get_inventory_data() -> True, ['Door: 0']
+[21:55:36] move_player(dir='Rightward') -> False, Something is blocking that direction
+[21:55:42] whats_in_position(x=0, y=2) -> True, Game object with type: Door, color: red, and symbol:  
+[21:59:39] get_all_grid_data() -> True, grid=6x6
+[21:59:39] get_inventory_data() -> True, []
+[21:59:46] whats_in_position(x=0, y=1) -> True, empty
+[22:00:06] get_player_position() -> True, Player is at (0, 0)
+[22:00:23] get_all_grid_data() -> True, grid=6x6
+[22:00:37] get_all_grid_data() -> True, grid=6x6
+[22:00:37] get_inventory_data() -> True, []
+[22:01:24] get_player_position() -> True, Player is at (0, 0)
+[22:01:36] get_all_grid_data() -> True, grid=6x6
+[22:01:41] whats_in_position(x=0, y=1) -> True, empty
+[22:01:48] whats_inside_chest(dir='Downward') -> False, Not a chest
+[22:01:55] get_all_grid_data() -> True, grid=6x6
+[22:01:55] get_inventory_data() -> True, []
+[22:03:58] get_all_grid_data() -> True, grid=3x3
+[22:03:58] get_inventory_data() -> True, []
+[22:04:11] whats_in_position(x=1, y=0) -> True, Chest holds Block with an amount of 10
+[22:04:16] take_from_chest(dir='Downward', amount=5) -> True, Took 5 Block(s) from chest
+[22:04:19] get_all_grid_data() -> True, grid=3x3
+[22:04:19] get_inventory_data() -> True, ['Block: 5']
+[22:04:27] build_object(objType='Block', dir='Rightward') -> True, Object successfully built at 0,1
+[22:04:31] get_all_grid_data() -> True, grid=3x3
+[22:04:31] get_inventory_data() -> True, ['Block: 4']
+[22:04:42] color_block(dir='Rightward', new_color='red') -> True, Block at (0, 1) colored red
+[22:04:45] take_from_chest(dir='Downward', amount=5) -> True, Took 5 Block(s) from chest
+[22:04:48] get_all_grid_data() -> True, grid=3x3
+[22:04:48] get_inventory_data() -> True, ['Block: 9']
+[22:04:59] get_all_grid_data() -> True, grid=3x3
+[22:05:15] whats_in_position(x=1, y=1) -> True, empty
+[22:05:29] move_player(dir='Downward') -> False, Something is blocking that direction
+[22:05:53] move_player(dir='Upward') -> False, Out of boundaries
+[22:05:59] move_player(dir='Rightward') -> False, Something is blocking that direction
+[22:06:19] build_object(objType='Door', dir='Rightward') -> False, There's something already there
+[22:06:46] take_from_chest(dir='Downward', amount=0) -> False, Amount must be positive
+[22:06:49] move_player(dir='Leftward') -> False, Out of boundaries
+[22:06:51] get_all_grid_data() -> True, grid=3x3
+[22:06:51] get_inventory_data() -> True, ['Block: 9']
