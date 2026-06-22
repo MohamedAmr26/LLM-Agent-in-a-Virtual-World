@@ -55,17 +55,23 @@ class Player(Object):
  
         if amount <= 0:
             return False, "Amount must be positive"
- 
+
         if obj.amount < amount:
             return False, "Chest doesn't have that amount of your desired object"
  
-        added_ok, added_msg = self.Inventory.Add_to_Inventory(obj.heldObjectType if hasattr(obj, "heldObjectType") else obj.heldType, amount)
+        if obj.type != "Chest":
+            return False, "That's not a chest"
+    
+        added_ok, added_msg = self.Inventory.Add_to_Inventory(obj.heldType, amount)
  
         if not added_ok:
             return False, added_msg
  
-        return obj.decreaseAmount(amount)
- 
+        ok, msg = obj.decreaseAmount(amount)
+        if not ok:
+            return False, msg
+        return True, f"Took {amount} {obj.heldType}(s) from chest" 
+
     def build_object(self, grid: List[List], objType: str, dir: str) -> tuple[bool, str]:
         GRID_X = len(grid)
         GRID_Y = len(grid[0])

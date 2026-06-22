@@ -20,3 +20,6 @@
 [19:20:53] take_from_chest(dir='Downward', amount=5) -> False, Nothing there or it's not a Chest
 [19:33:00] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
 [19:33:03] move_player(dir='Downward') -> False, Something is blocking that direction
+[19:58:45] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
+[19:59:00] take_from_chest(dir='Downward', amount=5) -> False, Chest doesn't have that amount of your desired object
+[19:59:01] take_from_chest(dir='Downward', amount=1) -> False, Chest doesn't have that amount of your desired object

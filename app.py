@@ -378,7 +378,7 @@ SYSTEM_INSTRUCTION = (
     "You must do an action on your prompt."
 )
 
-MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free"
+MODEL = "cohere/north-mini-code:free"
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",

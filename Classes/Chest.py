@@ -13,13 +13,13 @@ class Chest(Object):
         if self.amount - amt < 0:
             return False, "Given amount is higher than the total amount"
         self.amount -= amt
-        return True
+        return True, f"Took {amt} {self.heldType}(s) from chest"
     def addAmount(self, amt):
         self.amount += amt
-        return True
+        return True, f"Added {amt} {self.heldType}(s) from chest"
     def changeHeldType(self, heldType: str):
         self.heldType = heldType
-        return True
+        return True, f"Held type changed to {heldType}"
     
     def getInfo(self):
         return f"Chest holds {self.heldType} with an amount of {self.amount}"
