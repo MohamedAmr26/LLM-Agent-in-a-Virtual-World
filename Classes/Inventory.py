@@ -25,14 +25,14 @@ class Inventory:
             return False, f"Only added {to_add} items; inventory reached capacity"
         return True, f"Added {to_add} items to {objType}"
             
-    def DecreaseFromType(self, objType: str, amount: int):
+    def DecreaseFromType(self, objType: str, amount: int):        
         if self.is_empty():
             return False, "Inventory is empty"
         if amount <= 0:
             return False, "Amount must be positive"
  
         if not hasattr(self, objType) or not isinstance(getattr(self, objType), int):
-            return False, f"No integer named '{objType}' in inventory"
+            return False, f"No slot named '{objType}' in inventory"
  
         current_count = getattr(self, objType)
  
@@ -47,11 +47,15 @@ class Inventory:
  
         if to_remove < amount:
             return False, f"Only removed {to_remove} items; only {current_count} were available"
+        
         return True, f"Removed {to_remove} items from {objType}"
 
     def get_data(self):
         return vars(self)
     
+    def check_inventory_obj_amount(self, objType: str):
+        return getattr(self, objType) if hasattr(self, objType) else 0
+
     def get_inventory_list(self):
         return [f"{k}: {v}" for k, v in vars(self).items()
                 if k not in ("max_size", "actual_size") and isinstance(v, int)]

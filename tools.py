@@ -28,7 +28,9 @@ def log(line: str):
 
 def get_player_position(plr: Player, ):
     x, y = plr.get_current_position()
-    return True, f"Player is at ({x}, {y})"
+    ok, msg = True, f"Player is at ({x}, {y})"
+    log(f"get_player_position() -> {ok}, {msg}")
+    return ok, msg
 
 
 def move_player(plr: Player, dir: str, grid):
@@ -63,11 +65,17 @@ def trigger_door(plr: Player, dir: str, grid):
 
 def whats_in_position(plr: Player, x: int, y: int, grid, GRID_X, GRID_Y):
     if not in_boundaries(x, y, GRID_X, GRID_Y):
-        return False, "Out of boundaries"
+        ok, msg = False, "Out of boundaries"
+        log(f"whats_in_position(x={x}, y={y}) -> {ok}, {msg}")
+        return ok, msg
     obj = grid[x][y]
     if obj == -1:
-        return True, "empty"
-    return True, obj.getInfo()
+        ok, msg = True, "empty"
+        log(f"whats_in_position(x={x}, y={y}) -> {ok}, {msg}")
+        return ok, msg
+    ok, msg = True, obj.getInfo()
+    log(f"whats_in_position(x={x}, y={y}) -> {ok}, {msg}")
+    return ok, msg
 
 
 def get_all_grid_data(grid, GRID_X, GRID_Y):
@@ -78,18 +86,27 @@ def get_all_grid_data(grid, GRID_X, GRID_Y):
             obj = grid[x][y]
             row.append("~" if obj == -1 else obj.type)
         res += " ".join(row) + "\n"
-    return True, res
+    ok, msg = True, res
+    log(f"get_all_grid_data() -> {ok}, grid={GRID_X}x{GRID_Y}")
+    return ok, msg
 
 def get_inventory_data(plr: Player):
-    return True, plr.Inventory.get_inventory_list()
+    ok, msg = True, plr.Inventory.get_inventory_list()
+    log(f"get_inventory_data() -> {ok}, {msg}")
+    return ok, msg
 
 def whats_inside_chest(plr: Player, grid, dir: str, GRID_X, GRID_Y):
     x, y = get_pos_from_dir(dir, plr.x, plr.y, GRID_X, GRID_Y)
  
     if (x, y) == (-1, -1) or not in_boundaries(x, y, GRID_X, GRID_Y):
-        return False, "Out of boundaries"
+        ok, msg = False, "Out of boundaries"
+        log(f"whats_inside_chest(dir={dir!r}) -> {ok}, {msg}")
+        return ok, msg
     
     if not isinstance(grid[x][y], Chest):
-        return False, "Not a chest"
-
-    return True, grid[x][y].getInfo()
+        ok, msg = False, "Not a chest"
+        log(f"whats_inside_chest(dir={dir!r}) -> {ok}, {msg}")
+        return ok, msg
+    ok, msg = True, grid[x][y].getInfo()
+    log(f"whats_inside_chest(dir={dir!r}) -> {ok}, {msg}")
+    return ok, msg

@@ -1,7 +1,7 @@
 from typing import List
 from GameObject import Object
 from Inventory import Inventory
-from Utils import get_pos_from_dir, ALLOWED_COLORS
+from Utils import get_pos_from_dir, ALLOWED_COLORS, VALID_TYPES
 
 class Player(Object):
     def __init__(self, x: int, y: int, inventorySize: int) -> None:
@@ -73,6 +73,10 @@ class Player(Object):
         return True, f"Took {amount} {obj.heldType}(s) from chest" 
 
     def build_object(self, grid: List[List], objType: str, dir: str) -> tuple[bool, str]:
+        objType = VALID_TYPES.get(
+            objType.lower(),
+            objType
+        )
         GRID_X = len(grid)
         GRID_Y = len(grid[0])
         n_x, n_y = get_pos_from_dir(dir, self.x, self.y, GRID_X, GRID_Y)
@@ -83,14 +87,23 @@ class Player(Object):
         if grid[n_x][n_y] != -1:
             return False, "There's something already there"
  
-        res, msg = self.Inventory.DecreaseFromType(objType, 1)
- 
-        if not res:
-            return res, msg
- 
-        obj = Object.create(objType, n_x, n_y)
-        return obj.add_to_grid(grid, GRID_X, GRID_Y)
-        
+        if self.Inventory.check_inventory_obj_amount(objType) < 1:
+            return False, f"Not enough {objType} for building, You have zero of it"
+
+        res, msg = False, "Unknown happened"
+
+        try:
+            res, msg = self.Inventory.DecreaseFromType(objType, 1)
+            
+            if not res:
+                return res, msg
+            
+            obj = Object.create(objType, n_x, n_y)
+            res, msg = obj.add_to_grid(grid, GRID_X, GRID_Y)
+        except Exception as e:
+            return False, f"an issue occurred {e}"
+        return res, f"Object successfully built at {n_x},{n_y}"
+                
     def color_block(self, grid: List[List], dir: str, color: str):
         GRID_X = len(grid)
         GRID_Y = len(grid[0])

@@ -1,25 +1,74 @@
-[17:02:11] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
-[17:02:12] move_player(dir='Rightward') -> True, Moved Rightward to (0, 2)
-[17:02:14] take_from_chest(dir='Downward', amount=5) -> False, Out of boundaries
-[17:05:11] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
-[17:05:26] move_player(dir='Rightward') -> True, Moved Rightward to (0, 2)
-[17:05:56] take_from_chest(dir='Downward', amount=5) -> False, Out of boundaries
-[17:06:27] move_player(dir='Leftward') -> True, Moved Leftward to (0, 1)
-[16:06:05] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
-[16:06:54] take_from_chest(dir='Downward', amount=5) -> False, Out of boundaries
-[16:44:14] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
-[17:41:58] take_from_chest(dir='Downward', amount=5) -> False, Nothing there or it's not a Chest
-[17:42:07] move_player(dir='Downward') -> True, Moved Downward to (1, 0)
-[17:42:28] move_player(dir='Rightward') -> False, Something is blocking that direction
-[17:42:31] move_player(dir='Downward') -> True, Moved Downward to (2, 0)
-[17:42:43] move_player(dir='Rightward') -> True, Moved Rightward to (2, 1)
-[19:20:35] take_from_chest(dir='Downward', amount=5) -> False, Nothing there or it's not a Chest
-[19:20:41] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
-[19:20:51] move_player(dir='Downward') -> False, Something is blocking that direction
-[19:20:52] move_player(dir='Leftward') -> True, Moved Leftward to (0, 0)
-[19:20:53] take_from_chest(dir='Downward', amount=5) -> False, Nothing there or it's not a Chest
-[19:33:00] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
-[19:33:03] move_player(dir='Downward') -> False, Something is blocking that direction
-[19:58:45] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
-[19:59:00] take_from_chest(dir='Downward', amount=5) -> False, Chest doesn't have that amount of your desired object
-[19:59:01] take_from_chest(dir='Downward', amount=1) -> False, Chest doesn't have that amount of your desired object
+[21:20:27] get_all_grid_data() -> True, grid=5x5
+[21:20:27] get_inventory_data() -> True, []
+[21:20:33] whats_inside_chest(dir='Downward') -> True, Chest holds Block with an amount of 10
+[21:20:36] take_from_chest(dir='Downward', amount=5) -> True, Took 5 Block(s) from chest
+[21:20:53] get_inventory_data() -> True, ['Block: 4']
+[21:20:57] get_all_grid_data() -> True, grid=5x5
+[21:23:56] get_all_grid_data() -> True, grid=5x5
+[21:23:56] get_inventory_data() -> True, []
+[21:24:02] get_all_grid_data() -> True, grid=5x5
+[21:24:05] take_from_chest(dir='Downward', amount=5) -> True, Took 5 Block(s) from chest
+[21:24:15] get_inventory_data() -> True, ['Block: 4']
+[21:28:50] get_all_grid_data() -> True, grid=5x5
+[21:28:50] get_inventory_data() -> True, []
+[21:28:54] take_from_chest(dir='Downward', amount=5) -> True, Took 5 Block(s) from chest
+[21:28:56] get_inventory_data() -> True, ['Block: 5']
+[21:29:12] get_all_grid_data() -> True, grid=5x5
+[21:29:17] whats_in_position(x=0, y=1) -> True, empty
+[21:34:39] get_all_grid_data() -> True, grid=5x5
+[21:34:39] get_inventory_data() -> True, []
+[21:34:47] take_from_chest(dir='Downward', amount=5) -> True, Took 5 Block(s) from chest
+[21:34:51] build_object(objType='Block', dir='Rightward') -> False, an issue occured Unknown GameObject type: Block
+[21:37:35] get_all_grid_data() -> True, grid=5x5
+[21:37:35] get_inventory_data() -> True, []
+[21:37:44] get_all_grid_data() -> True, grid=5x5
+[21:37:50] take_from_chest(dir='Downward', amount=5) -> True, Took 5 Block(s) from chest
+[21:37:54] get_all_grid_data() -> True, grid=5x5
+[21:37:54] get_inventory_data() -> True, ['Block: 5']
+[21:38:06] get_all_grid_data() -> True, grid=5x5
+[21:38:15] build_object(objType='Block', dir='Rightward') -> False, There's something already there
+[21:41:04] get_all_grid_data() -> True, grid=3x3
+[21:41:04] get_inventory_data() -> True, []
+[21:41:09] get_all_grid_data() -> True, grid=3x3
+[21:41:13] take_from_chest(dir='Downward', amount=5) -> True, Took 5 Block(s) from chest
+[21:41:25] build_object(objType='Door', dir='Rightward') -> False, There's something already there
+[21:42:00] get_all_grid_data() -> True, grid=3x3
+[21:42:00] get_inventory_data() -> True, []
+[21:42:03] get_all_grid_data() -> True, grid=3x3
+[21:42:09] take_from_chest(dir='Downward', amount=5) -> True, Took 5 Block(s) from chest
+[21:42:13] whats_in_position(x=0, y=0) -> True, Game object with type: Player, color: green, and symbol: &
+[21:42:16] whats_in_position(x=0, y=1) -> True, empty
+[21:42:20] whats_in_position(x=1, y=0) -> True, Chest holds Block with an amount of 5
+[21:42:28] get_inventory_data() -> True, ['Block: 4']
+[21:43:49] get_all_grid_data() -> True, grid=3x3
+[21:43:49] get_inventory_data() -> True, []
+[21:43:54] whats_inside_chest(dir='Downward') -> True, Chest holds Block with an amount of 1
+[21:44:00] take_from_chest(dir='Downward', amount=1) -> True, Took 1 Block(s) from chest
+[21:44:05] get_all_grid_data() -> True, grid=3x3
+[21:44:12] build_object(objType='Door', dir='Rightward') -> False, No slot named 'Door' in inventory
+[21:44:17] build_object(objType='Block', dir='Rightward') -> False, There's something already there
+[21:47:20] get_all_grid_data() -> True, grid=3x3
+[21:47:20] get_inventory_data() -> True, []
+[21:47:26] whats_inside_chest(dir='Downward') -> True, Chest holds Block with an amount of 1
+[21:47:29] take_from_chest(dir='Downward', amount=1) -> True, Took 1 Block(s) from chest
+[21:47:34] get_all_grid_data() -> True, grid=3x3
+[21:47:40] get_inventory_data() -> True, ['Block: 0']
+[21:48:29] get_all_grid_data() -> True, grid=3x3
+[21:48:29] get_inventory_data() -> True, []
+[21:48:33] get_all_grid_data() -> True, grid=3x3
+[21:48:37] whats_inside_chest(dir='Downward') -> True, Chest holds Block with an amount of 1
+[21:48:45] whats_in_position(x=0, y=1) -> True, empty
+[21:48:57] whats_in_position(x=0, y=1) -> True, empty
+[21:49:06] take_from_chest(dir='Downward', amount=1) -> True, Took 1 Block(s) from chest
+[21:49:10] get_all_grid_data() -> True, grid=3x3
+[21:49:14] get_all_grid_data() -> True, grid=3x3
+[21:49:14] get_inventory_data() -> True, ['Block: 1']
+[21:49:21] build_object(objType='Block', dir='Rightward') -> False, Unknown happened
+[21:51:45] get_all_grid_data() -> True, grid=3x3
+[21:51:45] get_inventory_data() -> True, []
+[21:51:55] whats_inside_chest(dir='Downward') -> True, Chest holds Block with an amount of 1
+[21:52:06] take_from_chest(dir='Downward', amount=1) -> True, Took 1 Block(s) from chest
+[21:52:17] build_object(objType='Block', dir='Rightward') -> True, Object successfully built at 0,1
+[21:52:24] get_all_grid_data() -> True, grid=3x3
+[21:52:24] get_inventory_data() -> True, ['Block: 0']
+[21:52:33] whats_inside_chest(dir='Downward') -> True, Chest holds Block with an amount of 0

@@ -55,9 +55,13 @@ sys.path.insert(0, os.path.join(_THIS_DIR, "Classes"))
 
 from termcolor import colored
 from openai import OpenAI, RateLimitError
-from Utils import ALLOWED_COLORS, DIRECTION_ENUM
+from Utils import ALLOWED_COLORS, DIRECTION_ENUM, OBJECT_TYPES
 from Classes.Player import Player
 from Classes.Chest import Chest
+from Classes.Door import Door
+from Classes.Block import Block
+from Classes.Inventory import Inventory
+
 import tools
 from dotenv import load_dotenv
 
@@ -235,12 +239,14 @@ ALL_TOOLS = [
                 "Build/place an object from the player's inventory into the empty cell "
                 "adjacent to the player in the given direction. Consumes one item of "
                 "objType from the inventory."
+                "objType MUST be exactly one of: Block, Door. Case sensitive."
             ),
             "parameters": {
                 "type": "object",
                 "properties": {
                     "objType": {
                         "type": "string",
+                        "enum": OBJECT_TYPES,
                         "description": "The inventory item type to build, e.g. 'Block' or 'Door'.",
                     },
                     "dir": {
@@ -378,7 +384,7 @@ SYSTEM_INSTRUCTION = (
     "You must do an action on your prompt."
 )
 
-MODEL = "cohere/north-mini-code:free"
+MODEL = "openai/gpt-oss-120b:free"
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
@@ -417,8 +423,10 @@ def run_turn(prompt: str, max_tool_rounds: int = 8):
         if message.content:
             print(colored(message.content, "cyan"))
 
-        # Append the assistant reply (including its tool_calls) to history.
-        # We build a plain dict so there's no dependency on the SDK object type.
+        if not message.tool_calls:
+            #print(colored(f"[DEBUG] No tool calls returned. Message: {message.content}", "magenta"))
+            break
+
         messages.append({
             "role": "assistant",
             "content": message.content,
@@ -432,11 +440,8 @@ def run_turn(prompt: str, max_tool_rounds: int = 8):
                     },
                 }
                 for tc in message.tool_calls
-            ] or None
+            ]
         })
-
-        if not message.tool_calls:
-            break
 
         # Execute each tool call and feed results back as "tool" messages.
         for tc in message.tool_calls:
