@@ -131,3 +131,36 @@
 [22:06:49] move_player(dir='Leftward') -> False, Out of boundaries
 [22:06:51] get_all_grid_data() -> True, grid=3x3
 [22:06:51] get_inventory_data() -> True, ['Block: 9']
+[22:10:00] get_all_grid_data() -> True, grid=6x6
+[22:10:00] get_inventory_data() -> True, []
+[22:10:04] get_all_grid_data() -> True, grid=6x6
+[22:10:10] whats_in_position(x=0, y=1) -> True, empty
+[22:10:16] whats_in_position(x=1, y=0) -> True, empty
+[22:10:29] get_player_position() -> True, Player is at (0, 0)
+[22:10:41] get_all_grid_data() -> True, grid=6x6
+[22:10:41] get_inventory_data() -> True, []
+[22:11:00] get_all_grid_data() -> True, grid=6x6
+[22:11:11] move_player(dir='Down') -> False, Out of boundaries
+[22:11:23] get_player_position() -> True, Player is at (0, 0)
+[22:11:30] whats_in_position(x=0, y=1) -> True, empty
+[22:11:32] get_all_grid_data() -> True, grid=6x6
+[22:11:32] get_inventory_data() -> True, []
+[22:11:45] move_player(dir='Right') -> False, Out of boundaries
+[22:11:50] get_all_grid_data() -> True, grid=6x6
+[22:13:43] get_all_grid_data() -> True, grid=5x5
+[22:13:43] get_inventory_data() -> True, []
+[22:13:52] whats_in_position(x=1, y=0) -> True, empty
+[22:14:25] move_player(dir='Down') -> False, Out of boundaries
+[22:16:35] get_all_grid_data() -> True, grid=5x5
+[22:16:35] get_inventory_data() -> True, []
+[22:16:59] get_all_grid_data() -> True, grid=5x5
+[22:17:21] get_player_position() -> True, Player is at (0, 0)
+[22:17:28] move_player(dir='Right') -> False, Directions are [Upward, Downward, Leftward, Rightward], Case Sensitive
+[22:17:34] get_all_grid_data() -> True, grid=5x5
+[22:17:34] get_inventory_data() -> True, []
+[22:17:39] get_all_grid_data() -> True, grid=5x5
+[22:18:00] get_player_position() -> True, Player is at (0, 0)
+[22:18:20] move_player(dir='Right') -> False, Directions are [Upward, Downward, Leftward, Rightward], Case Sensitive
+[22:18:22] get_all_grid_data() -> True, grid=5x5
+[22:18:22] get_inventory_data() -> True, []
+[22:18:38] get_all_grid_data() -> True, grid=5x5

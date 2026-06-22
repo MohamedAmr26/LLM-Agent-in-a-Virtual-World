@@ -1,7 +1,7 @@
 from typing import List
 from GameObject import Object
 from Inventory import Inventory
-from Utils import get_pos_from_dir, ALLOWED_COLORS, VALID_TYPES
+from Utils import get_pos_from_dir, ALLOWED_COLORS, VALID_TYPES, DIRECTION_ENUM
 
 class Player(Object):
     def __init__(self, x: int, y: int, inventorySize: int) -> None:
@@ -19,6 +19,9 @@ class Player(Object):
         GRID_Y = len(grid[0])
         n_x, n_y = get_pos_from_dir(dir, self.x, self.y, GRID_X, GRID_Y)
  
+        if dir not in DIRECTION_ENUM:
+            return False, "Directions are [Upward, Downward, Leftward, Rightward], Case Sensitive"
+
         if (n_x, n_y) == (-1, -1):
             return False, "Out of boundaries"
 
