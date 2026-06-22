@@ -164,3 +164,27 @@
 [22:18:22] get_all_grid_data() -> True, grid=5x5
 [22:18:22] get_inventory_data() -> True, []
 [22:18:38] get_all_grid_data() -> True, grid=5x5
+[01:40:50] get_all_grid_data() -> True, grid=5x5
+[01:40:50] get_inventory_data() -> True, []
+[01:41:07] get_all_grid_data() -> True, grid=5x5
+[01:41:15] get_player_position() -> True, Player is at (0, 0)
+[01:41:37] get_all_grid_data() -> True, grid=5x5
+[01:41:37] get_inventory_data() -> True, []
+[01:41:39] get_all_grid_data() -> True, grid=5x5
+[01:41:53] get_player_position() -> True, Player is at (0, 0)
+[01:42:06] get_all_grid_data() -> True, grid=5x5
+[01:42:06] get_inventory_data() -> True, []
+[01:42:17] get_all_grid_data() -> True, grid=5x5
+[01:42:21] move_player(dir='Right') -> False, Directions are [Upward, Downward, Leftward, Rightward], Case Sensitive
+[01:42:34] get_player_position() -> True, Player is at (0, 0)
+[01:42:41] get_all_grid_data() -> True, grid=5x5
+[01:42:41] get_inventory_data() -> True, []
+[01:42:52] get_all_grid_data() -> True, grid=5x5
+[01:43:13] move_player(dir='Right') -> False, Directions are [Upward, Downward, Leftward, Rightward], Case Sensitive
+[01:43:21] get_all_grid_data() -> True, grid=5x5
+[01:43:21] get_inventory_data() -> True, []
+[01:43:36] get_player_position() -> True, Player is at (0, 0)
+[01:43:53] get_all_grid_data() -> True, grid=5x5
+[01:44:07] move_player(dir='Right') -> False, Directions are [Upward, Downward, Leftward, Rightward], Case Sensitive
+[01:44:13] get_all_grid_data() -> True, grid=5x5
+[01:44:13] get_inventory_data() -> True, []
