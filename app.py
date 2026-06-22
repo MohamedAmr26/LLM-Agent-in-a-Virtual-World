@@ -382,6 +382,7 @@ SYSTEM_INSTRUCTION = (
     "Use get_inventory_data to check what you're carrying before building."
     "Use whats_inside_chest to know what is inside the chest that is a neighbour to you"
     "You must do an action on your prompt."
+    "Make sure you don't be stuck between blocks, You can only go through empty places or opened doors"
 )
 
 MODEL = "openai/gpt-oss-120b:free"
