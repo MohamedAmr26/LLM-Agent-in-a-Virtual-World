@@ -85,12 +85,13 @@ def get_all_grid_data(grid, GRID_X, GRID_Y):
         for y in range(GRID_Y):
             obj = grid[x][y]
             if obj == -1:
-                row_parts.append("~")
+                row_parts.append(f"( ({x},{y}) ~ )")
             elif not isinstance(obj, list):
-                row_parts.append(obj.type)
+                row_parts.append(f"( ({x},{y}) {obj.getInfo()} )")
             else:
                 selected_obj = obj[len(obj)-1]
-                row_parts.append(selected_obj.type)
+                row_parts.append(f"( ({x},{y}) {selected_obj.getInfo()} )")
+
         res += " ".join(row_parts)
     
     log(f"get_all_grid_data() -> {True}, grid={GRID_X}x{GRID_Y}")
