@@ -4,6 +4,8 @@ The Agent has different objects (Door, Block) and an Inventory.
 The Agent has several tools given so it can perform a certain goal (Move, Build and etc).
 Agent can obtain objects from Chests that are already in the game given by the User.
 
+* The Agent's goal here is to be a House
+
 ---
 
 ## Setup

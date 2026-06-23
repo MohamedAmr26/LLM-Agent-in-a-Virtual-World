@@ -420,7 +420,7 @@ SYSTEM_INSTRUCTION = (
     "YOUR GOAL: Build a house using Blocks and Doors from the available chests.\n"
     "A valid house means:\n"
     "  - A closed rectangular perimeter of Block objects.\n"
-    "  - Exactly one Door in the perimeter as the entrance.\n"
+    "  - At least one Door in the perimeter as the entrance, Prefered to build the door first.\n"
     "  - The interior of the rectangle must remain empty (no blocks inside).\n"
     "  - You must end up OUTSIDE or in the doorway, never sealed inside.\n"
     "Plan the house shape and size BEFORE you start building. "

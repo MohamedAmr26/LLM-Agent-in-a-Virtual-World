@@ -573,3 +573,173 @@
 [11:01:12] move_player(dir='Upward') -> True, Moved Upward to (5, 3)
 [11:01:16] whats_in_position(x=5, y=2) -> True, Game object with type: Block, color: light_grey, and symbol: .
 [11:01:26] move_player(dir='Downward') -> True, Moved Downward to (6, 3)
+[11:04:01] get_all_grid_data() -> True, grid=7x7
+[11:04:01] get_inventory_data() -> True, []
+[11:04:07] move_player(dir='Leftward') -> False, Out of boundaries
+[11:04:12] move_player(dir='Upward') -> False, Out of boundaries
+[11:04:18] move_player(dir='Upward') -> False, Out of boundaries
+[11:04:30] move_player(dir='Upward') -> False, Out of boundaries
+[11:04:33] move_player(dir='Upward') -> False, Out of boundaries
+[11:04:46] move_player(dir='Upward') -> False, Out of boundaries
+[11:04:48] get_player_position() -> True, Player is at (0, 0)
+[11:04:52] move_player(dir='Downward') -> True, Moved Downward to (1, 0)
+[11:04:57] move_player(dir='Downward') -> True, Moved Downward to (2, 0)
+[11:05:01] move_player(dir='Downward') -> True, Moved Downward to (3, 0)
+[11:05:03] take_from_chest(dir='Downward', amount=12) -> True, Took 12 Block(s) from chest
+[11:05:07] move_player(dir='Rightward') -> True, Moved Rightward to (3, 1)
+[11:05:11] move_player(dir='Downward') -> True, Moved Downward to (4, 1)
+[11:05:13] get_all_grid_data() -> True, grid=7x7
+[11:05:13] get_inventory_data() -> True, ['Block: 12']
+[11:05:29] whats_in_position(x=4, y=0) -> True, Chest holds Block with an amount of 28
+[11:05:39] take_from_chest(dir='Leftward', amount=4) -> True, Took 4 Block(s) from chest
+[11:05:48] take_from_chest(dir='Downward', amount=2) -> False, Nothing there or it's not a Chest
+[11:05:55] take_from_chest(dir='Downward', amount=2) -> False, Nothing there or it's not a Chest
+[11:06:04] move_player(dir='Downward') -> True, Moved Downward to (5, 1)
+[11:06:10] whats_in_position(x=5, y=0) -> True, Chest holds Door with an amount of 2
+[11:06:25] take_from_chest(dir='Leftward', amount=2) -> True, Took 2 Door(s) from chest
+[11:06:39] move_player(dir='Upward') -> True, Moved Upward to (4, 1)
+[11:07:09] build_object(objType='Block', dir='Rightward') -> True, Object successfully built at 4,2
+[11:07:13] whats_in_position(x=4, y=1) -> True, Game object with type: Player, color: green, and symbol: &
+[11:07:24] build_object(objType='Door', dir='Rightward') -> False, There's something already there
+[11:07:31] whats_in_position(x=3, y=1) -> True, empty
+[11:07:43] build_object(objType='Block', dir='Upward') -> True, Object successfully built at 3,1
+[11:07:45] get_all_grid_data() -> True, grid=7x7
+[11:07:45] get_inventory_data() -> True, ['Block: 14', 'Door: 2']
+[11:07:52] move_player(dir='Downward') -> True, Moved Downward to (5, 1)
+[11:08:00] whats_in_position(x=5, y=1) -> True, Game object with type: Player, color: green, and symbol: &
+[11:08:09] whats_in_position(x=5, y=0) -> True, Chest holds Door with an amount of 0
+[11:08:27] whats_in_position(x=5, y=2) -> True, empty
+[11:08:37] move_player(dir='Upward') -> True, Moved Upward to (4, 1)
+[11:08:54] get_all_grid_data() -> True, grid=7x7
+[11:08:54] get_inventory_data() -> True, ['Block: 14', 'Door: 2']
+[11:09:01] whats_in_position(x=4, y=2) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[11:09:11] move_player(dir='Downward') -> True, Moved Downward to (5, 1)
+[11:09:15] whats_in_position(x=5, y=0) -> True, Chest holds Door with an amount of 0
+[11:09:24] whats_in_position(x=5, y=2) -> True, empty
+[11:09:46] build_object(objType='Block', dir='Rightward') -> True, Object successfully built at 5,2
+[11:09:54] get_all_grid_data() -> True, grid=7x7
+[11:09:54] get_inventory_data() -> True, ['Block: 13', 'Door: 2']
+[11:10:17] move_player(dir='Downward') -> True, Moved Downward to (6, 1)
+[11:10:20] whats_in_position(x=6, y=1) -> True, Game object with type: Player, color: green, and symbol: &
+[11:10:38] move_player(dir='Upward') -> True, Moved Upward to (5, 1)
+[11:10:50] move_player(dir='Upward') -> True, Moved Upward to (4, 1)
+[11:11:03] move_player(dir='Downward') -> True, Moved Downward to (5, 1)
+[11:11:10] take_from_chest(dir='Leftward', amount=10) -> False, Chest doesn't have that amount of your desired object
+[11:11:19] take_from_chest(dir='Leftward', amount=10) -> False, Chest doesn't have that amount of your desired object
+[11:11:25] move_player(dir='Upward') -> True, Moved Upward to (4, 1)
+[11:11:33] take_from_chest(dir='Leftward', amount=10) -> True, Took 10 Block(s) from chest
+[11:11:49] move_player(dir='Downward') -> True, Moved Downward to (5, 1)
+[11:12:12] move_player(dir='Upward') -> True, Moved Upward to (4, 1)
+[11:12:19] move_player(dir='Upward') -> False, Something is blocking that direction
+[11:12:29] move_player(dir='Rightward') -> False, Something is blocking that direction
+[11:12:31] get_all_grid_data() -> True, grid=7x7
+[11:12:31] get_inventory_data() -> True, ['Block: 23', 'Door: 2']
+[11:12:38] move_player(dir='Downward') -> True, Moved Downward to (5, 1)
+[11:13:02] move_player(dir='Downward') -> True, Moved Downward to (6, 1)
+[11:13:10] build_object(objType='Block', dir='Leftward') -> True, Object successfully built at 6,0
+[11:13:13] whats_in_position(x=6, y=1) -> True, Game object with type: Player, color: green, and symbol: &
+[11:13:18] build_object(objType='Block', dir='Upward') -> True, Object successfully built at 5,1
+[11:13:23] move_player(dir='Rightward') -> True, Moved Rightward to (6, 2)
+[11:13:30] build_object(objType='Block', dir='Rightward') -> True, Object successfully built at 6,3
+[11:13:36] get_all_grid_data() -> True, grid=7x7
+[11:13:36] get_inventory_data() -> True, ['Block: 20', 'Door: 2']
+[11:13:42] whats_in_position(x=5, y=1) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[11:13:55] whats_in_position(x=6, y=2) -> True, Game object with type: Player, color: green, and symbol: &
+[11:13:58] whats_in_position(x=6, y=3) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[11:14:02] whats_in_position(x=5, y=2) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[11:15:13] get_all_grid_data() -> True, grid=5x7
+[11:15:13] get_inventory_data() -> True, []
+[11:15:24] move_player(dir='Upward') -> False, Out of boundaries
+[11:15:35] whats_in_position(x=6, y=2) -> False, Out of boundaries
+[11:15:46] move_player(dir='Leftward') -> False, Out of boundaries
+[11:16:12] get_player_position() -> True, Player is at (0, 0)
+[11:16:22] move_player(dir='Downward') -> True, Moved Downward to (1, 0)
+[11:16:30] move_player(dir='Downward') -> True, Moved Downward to (2, 0)
+[11:16:33] move_player(dir='Downward') -> False, Something is blocking that direction
+[11:16:37] take_from_chest(dir='Downward', amount=40) -> True, Took 40 Block(s) from chest
+[11:16:40] get_inventory_data() -> True, ['Block: 40']
+[11:17:01] take_from_chest(dir='Leftward', amount=2) -> False, Out of boundaries
+[11:17:10] move_player(dir='Rightward') -> True, Moved Rightward to (2, 1)
+[11:17:16] move_player(dir='Downward') -> True, Moved Downward to (3, 1)
+[11:17:25] move_player(dir='Leftward') -> False, Something is blocking that direction
+[11:17:27] get_all_grid_data() -> True, grid=5x7
+[11:17:27] get_inventory_data() -> True, ['Block: 40']
+[11:17:39] move_player(dir='Downward') -> True, Moved Downward to (4, 1)
+[11:17:45] take_from_chest(dir='Leftward', amount=2) -> False, Inventory is full
+[11:17:57] build_object(objType='Block', dir='Rightward') -> True, Object successfully built at 4,2
+[11:18:11] move_player(dir='Upward') -> True, Moved Upward to (3, 1)
+[11:18:22] move_player(dir='Downward') -> True, Moved Downward to (4, 1)
+[11:18:41] move_player(dir='Upward') -> True, Moved Upward to (3, 1)
+[11:19:12] build_object(objType='Block', dir='Rightward') -> True, Object successfully built at 3,2
+[11:19:24] move_player(dir='Downward') -> True, Moved Downward to (4, 1)
+[11:19:31] take_from_chest(dir='Leftward', amount=1) -> True, Took 1 Door(s) from chest
+[11:19:42] get_all_grid_data() -> True, grid=5x7
+[11:19:42] get_inventory_data() -> True, ['Block: 38', 'Door: 1']
+[11:20:40] move_player(dir='Upward') -> True, Moved Upward to (3, 1)
+[11:21:01] build_object(objType='Door', dir='Upward') -> True, Object successfully built at 2,1
+[11:21:08] get_all_grid_data() -> True, grid=5x7
+[11:21:08] get_inventory_data() -> True, ['Block: 38', 'Door: 0']
+[11:21:14] whats_in_position(x=3, y=0) -> True, Chest holds Block with an amount of 0
+[11:21:24] move_player(dir='Downward') -> True, Moved Downward to (4, 1)
+[11:21:36] whats_in_position(x=4, y=3) -> True, empty
+[11:21:47] whats_in_position(x=1, y=1) -> True, empty
+[11:21:58] build_object(objType='Block', dir='Leftward') -> False, There's something already there
+[11:22:03] whats_in_position(x=4, y=0) -> True, Chest holds Door with an amount of 1
+[11:22:11] move_player(dir='Upward') -> True, Moved Upward to (3, 1)
+[11:23:15] get_all_grid_data() -> True, grid=5x7
+[11:23:15] get_inventory_data() -> True, ['Block: 38', 'Door: 0']
+[11:23:19] whats_in_position(x=3, y=2) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[11:23:22] whats_in_position(x=3, y=0) -> True, Chest holds Block with an amount of 0
+[11:23:35] move_player(dir='Downward') -> True, Moved Downward to (4, 1)
+[11:23:46] whats_in_position(x=4, y=2) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[11:24:16] trigger_door(dir='Upward') -> False, Empty place or isn't a Door
+[11:24:21] move_player(dir='Upward') -> True, Moved Upward to (3, 1)
+[11:24:50] move_player(dir='Upward') -> False, There's a closed door here
+[11:25:05] take_from_chest(dir='Leftward', amount=1) -> False, Chest doesn't have that amount of your desired object
+[11:25:19] get_all_grid_data() -> True, grid=5x7
+[11:25:32] take_from_chest(dir='Leftward', amount=1) -> False, Chest doesn't have that amount of your desired object
+[11:25:47] move_player(dir='Downward') -> True, Moved Downward to (4, 1)
+[11:26:10] take_from_chest(dir='Leftward', amount=1) -> True, Took 1 Door(s) from chest
+[11:26:12] get_all_grid_data() -> True, grid=5x7
+[11:26:12] get_inventory_data() -> True, ['Block: 38', 'Door: 1']
+[11:26:20] move_player(dir='Upward') -> True, Moved Upward to (3, 1)
+[11:26:33] move_player(dir='Upward') -> False, There's a closed door here
+[11:26:37] trigger_door(dir='Upward') -> True, Door opened
+[11:26:41] move_player(dir='Upward') -> True, Moved Upward to (2, 1)
+[11:27:04] move_player(dir='Upward') -> True, Moved Upward to (1, 1)
+[11:27:11] build_object(objType='Door', dir='Upward') -> True, Object successfully built at 0,1
+[11:27:17] get_all_grid_data() -> True, grid=5x7
+[11:27:17] get_inventory_data() -> True, ['Block: 38', 'Door: 0']
+[11:27:29] trigger_door(dir='Upward') -> True, Door opened
+[11:27:47] build_object(objType='Block', dir='Leftward') -> True, Object successfully built at 1,0
+[11:27:51] whats_in_position(x=1, y=0) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[11:28:07] get_all_grid_data() -> True, grid=5x7
+[11:28:07] get_inventory_data() -> True, ['Block: 37', 'Door: 0']
+[11:28:13] whats_in_position(x=1, y=2) -> True, empty
+[11:28:35] move_player(dir='Rightward') -> True, Moved Rightward to (1, 2)
+[11:28:39] whats_in_position(x=0, y=2) -> True, empty
+[11:28:53] build_object(objType='Block', dir='Rightward') -> True, Object successfully built at 1,3
+[11:28:57] whats_in_position(x=1, y=1) -> True, empty
+[11:29:02] get_all_grid_data() -> True, grid=5x7
+[11:29:02] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
+[11:29:36] move_player(dir='Leftward') -> True, Moved Leftward to (1, 1)
+[11:29:40] whats_in_position(x=1, y=0) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[11:30:01] move_player(dir='Upward') -> True, Moved Upward to (0, 1)
+[11:30:22] get_all_grid_data() -> True, grid=5x7
+[11:30:22] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
+[11:30:30] get_all_grid_data() -> True, grid=5x7
+[11:30:30] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
+[11:30:39] get_all_grid_data() -> True, grid=5x7
+[11:30:39] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
+[11:30:47] get_all_grid_data() -> True, grid=5x7
+[11:30:47] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
+[11:30:59] get_all_grid_data() -> True, grid=5x7
+[11:30:59] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
+[11:31:07] get_all_grid_data() -> True, grid=5x7
+[11:31:07] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
+[11:31:17] get_all_grid_data() -> True, grid=5x7
+[11:31:17] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
+[11:31:25] get_all_grid_data() -> True, grid=5x7
+[11:31:25] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
+[11:31:38] get_all_grid_data() -> True, grid=5x7
+[11:31:38] get_inventory_data() -> True, ['Block: 36', 'Door: 0']
