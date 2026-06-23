@@ -19,12 +19,23 @@ class Object:
     def add_to_grid(self, grid: List[List], GRID_X: int, GRID_Y: int):
         if not in_boundaries(self.x, self.y, GRID_X, GRID_Y):
             return False, "Out of boundaries"
- 
+
         if grid[self.x][self.y] != -1:
             return False, "Something is already in that position"
- 
+
         grid[self.x][self.y] = self
+        
         return True, f"{self.type} placed at ({self.x}, {self.y})"
+    
+    def remove_from_grid(self, grid: List[List], GRID_X: int, GRID_Y: int):
+        if not in_boundaries(self.x, self.y, GRID_X, GRID_Y):
+            return False, "Out of boundaries"
+        
+        grid[self.x][self.y] = -1
+        
+        return True, f"{self.type} got removed from the grid"
+
+
 
     @classmethod
     def create(cls, type_name: str, *args, **kwargs):

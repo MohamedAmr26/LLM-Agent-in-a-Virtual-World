@@ -110,8 +110,11 @@ def render():
             obj = grid[x][y]
             if obj == -1:
                 row_parts.append("~")
-            else:
+            elif not isinstance(obj, list):
                 row_parts.append(colored(obj.symbol, obj.color))
+            else:
+                selected_obj = obj[len(obj)-1]
+                row_parts.append(colored(selected_obj.symbol, selected_obj.color))
         print(" ".join(row_parts))
     print()
 
@@ -377,7 +380,7 @@ ALL_TOOLS = [
 # OpenRouter client setup
 ##########################
 
-SYSTEM_INSTRUCTION = (
+"""SYSTEM_INSTRUCTION = (
     "You are a player inside a 2D grid simulation. "
     "You MUST interact with the world by calling the provided tools"
     "never claim an action happened unless the matching tool call returned success."
@@ -393,6 +396,41 @@ SYSTEM_INSTRUCTION = (
     "Do NOT call get_all_grid_data or get_inventory_data at the start of a turn — "
     "use the provided state and act immediately. "
     "Only call those tools if you need to verify something after an action."
+)"""
+SYSTEM_INSTRUCTION = (
+    "You are a player inside a 2D grid simulation. "
+    "You MUST interact with the world by calling the provided tools. "
+    "Never claim an action happened unless the matching tool call returned success. "
+    "Every tool returns a boolean success flag and a message. "
+    "If success is false, read the message carefully, fix the issue, and retry with the correction.\n\n"
+
+    "CRITICAL - Direction values are CASE-SENSITIVE and must be EXACTLY:\n"
+    "  'Upward', 'Downward', 'Leftward', 'Rightward'\n"
+    "NEVER use 'Up', 'Down', 'Left', 'Right' — these will always fail.\n\n"
+
+    "The grid state and inventory are ALREADY provided in your prompt. "
+    "Do NOT call get_all_grid_data or get_inventory_data at the start of a turn. "
+    "Only call those tools to verify something AFTER an action.\n\n"
+
+    "MOVEMENT RULES — follow these strictly:\n"
+    "  - '~' means empty (you can move there).\n"
+    "  - You CANNOT move into a cell occupied by any object except an open Door.\n"
+    "  - Before moving, confirm the target cell is '~' in the grid.\n"
+    "  - Before building, confirm the target cell is '~'. "
+    "    NEVER build in a direction you may need to move through.\n\n"
+
+    "ANTI-STUCK RULES — always check these before acting:\n"
+    "  1. Count how many '~' cells are adjacent to you (Upward, Downward, Leftward, Rightward).\n"
+    "  2. If only ONE empty cell is adjacent, do NOT build into it — it is your only escape.\n"
+    "  3. If ZERO empty cells are adjacent, you are stuck. "
+    "     If a Door is adjacent, trigger it to open and move through it.\n"
+    "  4. Never place a Block or Door that reduces your free adjacent cells to zero.\n\n"
+
+    "PLANNING RULES:\n"
+    "  - Before each action, state your current position, "
+    "    list which adjacent cells are empty, and pick an action that keeps at least one escape.\n"
+    "  - To reach a chest, plan a path of empty cells to walk there — move first, then take.\n"
+    "  - Only build after confirming you will still have a free cell to move into afterward.\n"
 )
 
 MODEL = "openai/gpt-oss-120b:free"

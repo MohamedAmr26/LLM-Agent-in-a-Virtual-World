@@ -1,7 +1,7 @@
 from typing import List
 from GameObject import Object
 from Inventory import Inventory
-from Utils import get_pos_from_dir, ALLOWED_COLORS, VALID_TYPES, DIRECTION_ENUM
+from Utils import get_pos_from_dir, ALLOWED_COLORS, VALID_TYPES, DIRECTION_ENUM, in_boundaries
 
 class Player(Object):
     def __init__(self, x: int, y: int, inventorySize: int) -> None:
@@ -25,14 +25,16 @@ class Player(Object):
         if (n_x, n_y) == (-1, -1):
             return False, "Out of boundaries"
 
-        if grid[n_x][n_y] != -1 and grid[n_x][n_y].type == "Door" and grid[n_x][n_y].state == True:
-            return False, "There's a closed door here"
-
-        if grid[n_x][n_y] != -1 and grid[n_x][n_y].type != "Door":
+        if grid[n_x][n_y] != -1 and isinstance(grid[n_x][n_y], list):
+            for obj in grid[n_x][n_y]:
+                if obj.type == "Door" and obj.state == True:
+                    return False, "There's a closed door here"
+    
+        if grid[n_x][n_y] != -1 and not isinstance(grid[n_x][n_y], list):
             return False, "Something is blocking that direction"
  
         old_x, old_y = self.x, self.y
-        grid[old_x][old_y] = -1
+        self.remove_from_grid(grid, GRID_X, GRID_Y)
  
         self.x = n_x
         self.y = n_y
@@ -40,7 +42,12 @@ class Player(Object):
         ok, msg = self.add_to_grid(grid, GRID_X, GRID_Y)
         if not ok:
             self.x, self.y = old_x, old_y
-            grid[old_x][old_y] = self
+
+            try:
+                self.add_to_grid(grid, GRID_X, GRID_Y)
+            except Exception as e:
+                msg = f"{msg}, {e}"
+
             return ok, msg
  
         return True, f"Moved {dir} to ({self.x}, {self.y})"
@@ -143,6 +150,31 @@ class Player(Object):
             return False, "Empty place or isn't a Door"
  
         return obj.trigger_door()
+
+    def add_to_grid(self, grid: List[List], GRID_X: int, GRID_Y: int):
+        if not in_boundaries(self.x, self.y, GRID_X, GRID_Y):
+            return False, "Out of boundaries"
+
+        if grid[self.x][self.y] != -1 and not isinstance(grid[self.x][self.y], list):
+            return False, "Something is already in that position"
+
+        if not isinstance(grid[self.x][self.y], list):
+            grid[self.x][self.y] = self
+        else:
+            grid[self.x][self.y].append(self)
+        
+        return True, f"{self.type} placed at ({self.x}, {self.y})"
+    
+    def remove_from_grid(self, grid: List[List], GRID_X: int, GRID_Y: int):
+        if not in_boundaries(self.x, self.y, GRID_X, GRID_Y):
+            return False, "Out of boundaries"
+        
+        if isinstance(grid[self.x][self.y], list):
+            grid[self.x][self.y].pop()
+        else:
+            grid[self.x][self.y] = -1
+        
+        return True, f"{self.type} got removed from the grid"
 
 
         
