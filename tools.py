@@ -81,14 +81,20 @@ def whats_in_position(plr: Player, x: int, y: int, grid, GRID_X, GRID_Y):
 def get_all_grid_data(grid, GRID_X, GRID_Y):
     res = ""
     for x in range(GRID_X):
-        row = []
+        row_parts = []
         for y in range(GRID_Y):
             obj = grid[x][y]
-            row.append("~" if obj == -1 else obj.type)
-        res += " ".join(row) + "\n"
-    ok, msg = True, res
-    log(f"get_all_grid_data() -> {ok}, grid={GRID_X}x{GRID_Y}")
-    return ok, msg
+            if obj == -1:
+                row_parts.append("~")
+            elif not isinstance(obj, list):
+                row_parts.append(obj.symbol)
+            else:
+                selected_obj = obj[len(obj)-1]
+                row_parts.append(selected_obj.symbol)
+        res += " ".join(row_parts)
+    
+    log(f"get_all_grid_data() -> {True}, grid={GRID_X}x{GRID_Y}")
+    return True, res
 
 def get_inventory_data(plr: Player):
     ok, msg = True, plr.Inventory.get_inventory_list()

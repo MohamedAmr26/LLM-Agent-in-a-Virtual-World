@@ -338,3 +338,62 @@
 [10:10:59] whats_in_position(x=3, y=1) -> True, Game object with type: Block, color: light_grey, and symbol: .
 [10:11:01] get_all_grid_data() -> True, grid=6x6
 [10:11:01] get_inventory_data() -> True, ['Block: 16', 'Door: 2']
+[10:27:10] get_all_grid_data() -> True, grid=7x7
+[10:27:10] get_inventory_data() -> True, []
+[10:27:18] whats_in_position(x=4, y=0) -> True, Chest holds Door with an amount of 2
+[10:27:21] whats_in_position(x=4, y=2) -> True, empty
+[10:27:25] whats_inside_chest(dir='Leftward') -> False, Out of boundaries
+[10:27:28] whats_in_position(x=3, y=1) -> True, empty
+[10:27:32] take_from_chest(dir='Leftward', amount=2) -> False, Out of boundaries
+[10:27:36] take_from_chest(dir='Leftward', amount=1) -> False, Out of boundaries
+[10:27:44] whats_in_position(x=4, y=0) -> True, Chest holds Door with an amount of 2
+[10:27:51] get_all_grid_data() -> True, grid=7x7
+[10:27:55] take_from_chest(dir='Leftward', amount=1) -> False, Out of boundaries
+[10:27:59] get_player_position() -> True, Player is at (0, 0)
+[10:28:06] move_player(dir='Rightward') -> True, Moved Rightward to (0, 1)
+[10:28:09] move_player(dir='Downward') -> True, Moved Downward to (1, 1)
+[10:28:12] move_player(dir='Leftward') -> True, Moved Leftward to (1, 0)
+[10:28:14] get_all_grid_data() -> True, grid=7x7
+[10:28:14] get_inventory_data() -> True, []
+[10:28:23] move_player(dir='Downward') -> True, Moved Downward to (2, 0)
+[10:28:28] whats_in_position(x=3, y=0) -> True, Chest holds Block with an amount of 40
+[10:28:34] take_from_chest(dir='Downward', amount=10) -> True, Took 10 Block(s) from chest
+[10:28:41] move_player(dir='Downward') -> False, Something is blocking that direction
+[10:28:45] whats_in_position(x=2, y=1) -> True, empty
+[10:28:53] move_player(dir='Rightward') -> True, Moved Rightward to (2, 1)
+[10:29:00] move_player(dir='Upward') -> True, Moved Upward to (1, 1)
+[10:29:12] move_player(dir='Downward') -> True, Moved Downward to (2, 1)
+[10:29:15] get_inventory_data() -> True, ['Block: 10']
+[10:29:24] move_player(dir='Downward') -> True, Moved Downward to (3, 1)
+[10:29:30] take_from_chest(dir='Leftward', amount=2) -> True, Took 2 Block(s) from chest
+[10:29:34] move_player(dir='Downward') -> True, Moved Downward to (4, 1)
+[10:29:37] take_from_chest(dir='Leftward', amount=2) -> True, Took 2 Door(s) from chest
+[10:29:39] get_all_grid_data() -> True, grid=7x7
+[10:29:39] get_inventory_data() -> True, ['Block: 12', 'Door: 2']
+[10:29:55] whats_in_position(x=4, y=0) -> True, Chest holds Door with an amount of 0
+[10:30:14] whats_in_position(x=2, y=2) -> True, empty
+[10:30:18] whats_in_position(x=3, y=1) -> True, empty
+[10:30:41] whats_in_position(x=3, y=2) -> True, empty
+[10:31:17] move_player(dir='Upward') -> True, Moved Upward to (3, 1)
+[10:31:21] whats_in_position(x=2, y=1) -> True, empty
+[10:31:32] move_player(dir='Leftward') -> False, Something is blocking that direction
+[10:31:37] whats_in_position(x=3, y=0) -> True, Chest holds Block with an amount of 28
+[10:31:53] move_player(dir='Upward') -> True, Moved Upward to (2, 1)
+[10:32:24] build_object(objType='Block', dir='Upward') -> True, Object successfully built at 1,1
+[10:32:28] whats_in_position(x=0, y=1) -> True, empty
+[10:32:35] build_object(objType='Block', dir='Rightward') -> True, Object successfully built at 2,2
+[10:32:47] whats_in_position(x=1, y=1) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[10:32:49] get_all_grid_data() -> True, grid=7x7
+[10:32:49] get_inventory_data() -> True, ['Block: 10', 'Door: 2']
+[10:32:53] whats_in_position(x=1, y=1) -> True, Game object with type: Block, color: light_grey, and symbol: .
+[10:32:57] whats_in_position(x=2, y=1) -> True, Game object with type: Player, color: green, and symbol: &
+[10:33:00] whats_in_position(x=2, y=0) -> True, empty
+[10:33:03] whats_in_position(x=1, y=2) -> True, empty
+[10:33:09] get_all_grid_data() -> True, grid=7x7
+[10:33:31] move_player(dir='Downward') -> True, Moved Downward to (3, 1)
+[10:33:45] move_player(dir='Rightward') -> True, Moved Rightward to (3, 2)
+[10:33:51] whats_in_position(x=3, y=2) -> True, Game object with type: Player, color: green, and symbol: &
+[10:34:00] move_player(dir='Leftward') -> True, Moved Leftward to (3, 1)
+[10:34:07] whats_in_position(x=2, y=1) -> True, empty
+[10:34:11] whats_in_position(x=2, y=1) -> True, empty
+[10:34:31] build_object(objType='Door', dir='Rightward') -> True, Object successfully built at 3,2
