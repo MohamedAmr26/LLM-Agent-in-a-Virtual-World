@@ -126,7 +126,10 @@ class Player(Object):
             return False, "Out of boundaries"
  
         obj = grid[n_x][n_y]
- 
+
+        if isinstance(obj, list):
+            return False, "Doors cannot be colored"
+
         if obj == -1 or obj.type != "Block":
             return False, "Empty place or isn't a Block"
  
@@ -143,13 +146,18 @@ class Player(Object):
  
         if (n_x, n_y) == (-1, -1):
             return False, "Out of boundaries"
- 
+         
         obj = grid[n_x][n_y]
- 
-        if obj == -1 or obj.type != "Door":
+
+        if obj == -1:
             return False, "Empty place or isn't a Door"
- 
-        return obj.trigger_door()
+
+        actual = obj[0] if isinstance(obj, list) else obj
+
+        if actual.type != "Door":
+            return False, "Empty place or isn't a Door"
+
+        return actual.trigger_door()
 
     def add_to_grid(self, grid: List[List], GRID_X: int, GRID_Y: int):
         if not in_boundaries(self.x, self.y, GRID_X, GRID_Y):
