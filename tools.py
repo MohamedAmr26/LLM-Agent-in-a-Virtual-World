@@ -87,10 +87,10 @@ def get_all_grid_data(grid, GRID_X, GRID_Y):
             if obj == -1:
                 row_parts.append("~")
             elif not isinstance(obj, list):
-                row_parts.append(obj.symbol)
+                row_parts.append(obj.type)
             else:
                 selected_obj = obj[len(obj)-1]
-                row_parts.append(selected_obj.symbol)
+                row_parts.append(selected_obj.type)
         res += " ".join(row_parts)
     
     log(f"get_all_grid_data() -> {True}, grid={GRID_X}x{GRID_Y}")
