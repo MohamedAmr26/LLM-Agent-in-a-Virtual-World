@@ -80,7 +80,7 @@ class Player(Object):
         if not added_ok:
             return False, added_msg
  
-        ok, msg = obj.decreaseAmount(amount)
+        ok, msg = obj.decreaseAmount(added_msg)
         if not ok:
             return False, msg
         return True, f"Took {amount} {obj.heldType}(s) from chest" 

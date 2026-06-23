@@ -23,7 +23,8 @@ class Inventory:
  
         if to_add < amount:
             return False, f"Only added {to_add} items; inventory reached capacity"
-        return True, f"Added {to_add} items to {objType}"
+        
+        return True, to_add
             
     def DecreaseFromType(self, objType: str, amount: int):        
         if self.is_empty():
